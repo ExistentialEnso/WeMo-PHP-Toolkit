@@ -20,4 +20,6 @@ The outlets even save their name and icon to them (which can be changed in the o
 ```
     $outlet->getIconUrl(); // e.g. "http://192.168.1.x:49153/icon.png"
     $outlet->getName(); // e.g. "Air Purifier"
+    $outlet->getManufacturer(); // e.g. "Belkin"
+    $outlet->getModelDescription(); // e.g. "Belkin Plugin Socket 1.0"
 ```
