@@ -1,4 +1,23 @@
 WeMo-PHP-Toolkit
 ================
 
-PHP classes for use with Belkin's WeMo system.
+* Author: Thorne Melcher (GitHub: ExistentialEnso)
+* License: LGPL v3 (more permissive commercial licensing available for a fee on request)
+* Version: 0.1
+
+PHP classes for use with Belkin's WeMo system. Currently only has an "Outlet" class (sorry, that's the only WeMo product
+I own!)
+
+Usage is exceedingly simple:
+
+```
+   $outlet = \wemo\models\Outlet("192.168.1.x"); // Change to location of Outlet on your network
+   $outlet->setIsOn(false); // Outlet will shut off!
+```
+
+The outlets even save their name and icon to them (which can be changed in the official apps), which you can view:
+
+```
+    $outlet->getIconUrl(); // e.g. "http://192.168.1.x:49153/icon.png"
+    $outlet->getName(); // e.g. "Air Purifier"
+```
