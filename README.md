@@ -3,7 +3,7 @@ WeMo-PHP-Toolkit
 
 * Author: Thorne Melcher (GitHub: ExistentialEnso)
 * License: LGPL v3 (more permissive commercial licensing available for a fee on request)
-* Version: 0.1
+* Version: 0.1.1
 
 PHP classes for use with Belkin's WeMo system. Currently only has an "Outlet" class (sorry, that's the only WeMo product
 I own!)

@@ -9,18 +9,12 @@
 namespace wemo\models;
 
 /**
- * Class representing a WeMo Outlet.
+ * Model class representing a WeMo Outlet. Connects over IP, so it must be accessible to the server running the PHP
+ * app at the IP specified.
  *
  * @package wemo\models
  */
-class Outlet {
-  /**
-   * The display name for this outlet.
-   *
-   * @var string
-   */
-  protected $display_name = "";
-
+class Outlet extends Device {
   /**
    * The MAC address of the outlet.
    *
@@ -50,6 +44,13 @@ class Outlet {
   protected $icon_url;
 
   /**
+   * Outlet's SOAP port. Currently always 49153 in all usages I'm aware of.
+   *
+   * @var int
+   */
+  protected $port = 49153;
+
+  /**
    * Constructor method. Will populate other information beyond IP address from the outlet itself.
    *
    * @param $ip_address
@@ -69,25 +70,26 @@ class Outlet {
    */
   public function refresh() {
     // Squelching is bad practice, but we're handling failures
-    $contents = @file_get_contents("http://" . $this->ip_address . ":49153/setup.xml");
+    $contents = @file_get_contents("http://" . $this->ip_address . ":" . $this->port . "/setup.xml");
 
     if($contents === false) return false;
 
     $contents = new \SimpleXMLElement($contents);
 
-    $this->display_name = $contents->device->friendlyName;
-    $this->mac_address = $contents->device->macAddress;
+    $this->manufacturer = (string) $contents->device->manufacturer;
+    $this->manufacturer_url = (string) $contents->device->manufacturerURL;
+    $this->model_description = (string) $contents->device->modelDescription;
+    $this->model_name = (string) $contents->device->modelName;
+    $this->model_number = (string) $contents->device->modelNumber;
+    $this->model_url = (string) $contents->device->modelURL;
+    $this->serial_number = (string) $contents->device->serialNumber;
+
+    $this->display_name = (string) $contents->device->friendlyName;
+    $this->mac_address = (string) $contents->device->macAddress;
     $this->is_on = ($contents->device->binaryState == "1" ? true : false);
-    $this->icon_url = "http://" . $this->ip_address . ":49153/" . $contents->device->iconList->icon->url;
+    $this->icon_url = "http://" . $this->ip_address . ":" . $this->port . "/" . $contents->device->iconList->icon->url;
 
     return true;
-  }
-
-  /**
-   * @return string
-   */
-  public function getDisplayName() {
-    return $this->display_name;
   }
 
   /**
@@ -128,7 +130,7 @@ class Outlet {
     $this->is_on = $is_on;
     $on_off = $is_on ? "1" : "0";
 
-    $location = 'http://'.$this->ip_address.':49153/upnp/control/basicevent1';
+    $location = 'http://'.$this->ip_address.':' . $this->port . '/upnp/control/basicevent1';
     $action = 'urn:Belkin:service:basicevent:1#SetBinaryState';
 
     $client = new \SoapClient(dirname(__DIR__) . "/wsdl/BasicService.wsdl");
@@ -142,4 +144,15 @@ class Outlet {
       // Our soap ain't faulty, but PHP doesn't want us to drop the soap and will generate low-level warnings
     }
   }
+
+  /**
+   * Gets the SOAP port of the Outlet. Currently always returns 49153, but this is subject to change.
+   *
+   * @return int
+   */
+  public function getPort() {
+    return $this->port;
+  }
+
+
 }
