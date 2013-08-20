@@ -8,10 +8,10 @@ WeMo-PHP-Toolkit
 PHP classes for use with Belkin's WeMo system. Currently only has an "Outlet" class (sorry, that's the only WeMo product
 I own!)
 
-Usage is exceedingly simple:
+Usage is exceedingly simple (though make sure to include/require the class files if you're not using an autoloader):
 
 ```
-   $outlet = \wemo\models\Outlet("192.168.1.x"); // Change to location of Outlet on your network
+   $outlet = new \wemo\models\Outlet("192.168.1.x"); // Change to location of Outlet on your network
    $outlet->setIsOn(false); // Outlet will shut off!
 ```
 
