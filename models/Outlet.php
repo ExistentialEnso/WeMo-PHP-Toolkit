@@ -110,7 +110,21 @@ class Outlet extends Device {
    * @return boolean
    */
   public function getIsOn() {
-    return $this->is_on;
+    $location = 'http://'.$this->ip_address.':' . $this->port . '/upnp/control/basicevent1';
+    $action = 'urn:Belkin:service:basicevent:1#GetBinaryState';
+
+    $client = new \SoapClient(dirname(__DIR__) . "/wsdl/BasicService.wsdl");
+    $xml = '<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:GetBinaryState xmlns:u="urn:Belkin:service:basicevent:1"></u:GetBinaryState></s:Body></s:Envelope>';
+
+    try {
+      $response = $client->__doRequest($xml, $location, $action, 1, false);
+
+      preg_match("/<BinaryState>(\d)<\/BinaryState>/", $response, $matches);
+
+      return $matches[1];
+    } catch (SoapFault $exception) {
+      // Our soap ain't faulty, but PHP doesn't want us to drop the soap and will generate low-level warnings
+    }
   }
 
   /**
