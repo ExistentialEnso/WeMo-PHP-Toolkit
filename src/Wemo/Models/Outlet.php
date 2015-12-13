@@ -30,13 +30,6 @@ class Outlet extends Device {
   protected $ip_address;
 
   /**
-   * Whether or not this outlet is on.
-   *
-   * @var boolean
-   */
-  protected $is_on = false;
-
-  /**
    * The URL of the icon to display for this outlet.
    *
    * @var string
@@ -86,7 +79,6 @@ class Outlet extends Device {
 
     $this->display_name = (string) $contents->device->friendlyName;
     $this->mac_address = (string) $contents->device->macAddress;
-    $this->is_on = ($contents->device->binaryState == "1" ? true : false);
     $this->icon_url = "http://" . $this->ip_address . ":" . $this->port . "/" . $contents->device->iconList->icon->url;
 
     return true;
@@ -107,10 +99,26 @@ class Outlet extends Device {
   }
 
   /**
+   * Whether or not this outlet is on.
+   *
    * @return boolean
    */
   public function getIsOn() {
-    return $this->is_on;
+    $location = 'http://'.$this->ip_address.':' . $this->port . '/upnp/control/basicevent1';
+    $action = 'urn:Belkin:service:basicevent:1#GetBinaryState';
+
+    $client = new \SoapClient(dirname(__DIR__) . "/wsdl/BasicService.wsdl");
+    $xml = '<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:GetBinaryState xmlns:u="urn:Belkin:service:basicevent:1"></u:GetBinaryState></s:Body></s:Envelope>';
+
+    try {
+      $response = $client->__doRequest($xml, $location, $action, 1, false);
+
+      preg_match("/<BinaryState>(\d)<\/BinaryState>/", $response, $matches);
+
+      return ($matches[1] == 1);
+    } catch (SoapFault $exception) {
+      // Our soap ain't faulty, but PHP doesn't want us to drop the soap and will generate low-level warnings
+    }
   }
 
   /**
