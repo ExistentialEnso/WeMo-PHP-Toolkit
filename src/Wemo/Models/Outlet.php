@@ -81,7 +81,6 @@ class Outlet extends Device {
 
     try {
       $response = $client->__doRequest($xml, $location, $action, 1, false);
-
       preg_match("/<BinaryState>(\d)<\/BinaryState>/", $response, $matches);
 
       return ($matches[1] == 1);
@@ -94,12 +93,14 @@ class Outlet extends Device {
    * Sets whether or not this outlet is on. Makes the SOAP call to the outlet itself to enact the change.
    *
    * @param bool $is_on
-   * @return string
+   * @return boolean
    */
   public function setIsOn($is_on) {
-    $this->is_on = $is_on;
-    $on_off = $is_on ? "1" : "0";
+    if ($this->getIsOn() == $is_on) {
+      return $is_on;
+    }
 
+    $on_off = $is_on ? "1" : "0";
     $location = 'http://'.$this->ip_address.':' . $this->port . '/upnp/control/basicevent1';
     $action = 'urn:Belkin:service:basicevent:1#SetBinaryState';
 
@@ -108,8 +109,9 @@ class Outlet extends Device {
 
     try {
       $response = $client->__doRequest($xml, $location, $action, 1, false);
+      preg_match("/<BinaryState>(\d)<\/BinaryState>/", $response, $matches);
 
-      return $response;
+      return ($matches[1] == 1);
     } catch (SoapFault $exception) {
       // Our soap ain't faulty, but PHP doesn't want us to drop the soap and will generate low-level warnings
     }
