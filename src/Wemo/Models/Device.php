@@ -6,12 +6,12 @@
  * @license LGPL
  */
 
-namespace wemo\models;
+namespace Wemo\Models;
 
 /**
  * Generic WeMo device class. All devices will have these fields.
  *
- * @package wemo\models
+ * @package Wemo\Models
  */
 class Device {
   /**

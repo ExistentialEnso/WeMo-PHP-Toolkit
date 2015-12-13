@@ -6,13 +6,13 @@
  * @license LGPL
  */
 
-namespace wemo\models;
+namespace Wemo\Models;
 
 /**
  * Model class representing a WeMo Outlet. Connects over IP, so it must be accessible to the server running the PHP
  * app at the IP specified.
  *
- * @package wemo\models
+ * @package Wemo\Models
  */
 class Outlet extends Device {
   /**
