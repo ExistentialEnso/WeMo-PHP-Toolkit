@@ -13,7 +13,29 @@ namespace Wemo\Models;
  *
  * @package Wemo\Models
  */
-class Device {
+abstract class Device {
+
+  /**
+   * The IP Address of the device.
+   *
+   * @var string
+   */
+  protected $ip_address;
+
+  /**
+   * Device's SOAP port. Currently always 49153 in all usages I'm aware of.
+   *
+   * @var int
+   */
+  protected $port = 49153;
+
+  /**
+   * The MAC address of the device.
+   *
+   * @var string
+   */
+  protected $mac_address;
+
   /**
    * The display name stored on the device.
    *
@@ -71,9 +93,54 @@ class Device {
   protected $serial_number;
 
   /**
+   * If the device's properties have been fetched yet. $this->refresh() will be called
+   * from all getters if this is false. Subclasses should implement $this->refresh and
+   * set this variable appropriately for success or failure.
+   *
+   * @var boolean
+   */
+  protected $properties_fetched = false;
+
+  /**
+   * Updates the devices's state by pulling info from the device itself.
+   * Subclasses implementing this should set $this->properties_fetched
+   * appropriately for success or failure.
+   */
+  abstract public function refresh();
+
+  /**
+   * @return string
+   */
+  public function getIpAddress() {
+    return $this->ip_address;
+  }
+
+  /**
+   * Gets the SOAP port of the Outlet. Currently always returns 49153, but this is subject to change.
+   *
+   * @return int
+   */
+  public function getPort() {
+    return $this->port;
+  }
+
+  /**
+   * @return string
+   */
+  public function getMacAddress() {
+    if (!$this->properties_fetched) {
+      $this->refresh();
+    }
+    return $this->mac_address;
+  }
+
+  /**
    * @return string
    */
   public function getDisplayName() {
+    if (!$this->properties_fetched) {
+      $this->refresh();
+    }
     return $this->display_name;
   }
 
@@ -81,6 +148,9 @@ class Device {
    * @return string
    */
   public function getManufacturer() {
+    if (!$this->properties_fetched) {
+      $this->refresh();
+    }
     return $this->manufacturer;
   }
 
@@ -88,6 +158,9 @@ class Device {
    * @return string
    */
   public function getManufacturerUrl() {
+    if (!$this->properties_fetched) {
+      $this->refresh();
+    }
     return $this->manufacturer_url;
   }
 
@@ -95,6 +168,9 @@ class Device {
    * @return string
    */
   public function getModelName() {
+    if (!$this->properties_fetched) {
+      $this->refresh();
+    }
     return $this->model_name;
   }
 
@@ -102,6 +178,9 @@ class Device {
    * @return string
    */
   public function getModelDescription() {
+    if (!$this->properties_fetched) {
+      $this->refresh();
+    }
     return $this->model_description;
   }
 
@@ -109,6 +188,9 @@ class Device {
    * @return string
    */
   public function getModelNumber() {
+    if (!$this->properties_fetched) {
+      $this->refresh();
+    }
     return $this->model_number;
   }
 
@@ -116,6 +198,9 @@ class Device {
    * @return string
    */
   public function getModelUrl() {
+    if (!$this->properties_fetched) {
+      $this->refresh();
+    }
     return $this->model_url;
   }
 
@@ -123,8 +208,9 @@ class Device {
    * @return string
    */
   public function getSerialNumber() {
+    if (!$this->properties_fetched) {
+      $this->refresh();
+    }
     return $this->serial_number;
   }
-
-
 }
