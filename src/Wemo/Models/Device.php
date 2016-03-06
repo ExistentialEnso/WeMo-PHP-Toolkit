@@ -23,7 +23,7 @@ abstract class Device {
   protected $ip_address;
 
   /**
-   * Device's SOAP port. Currently always 49153 in all usages I'm aware of.
+   * Device's SOAP port. Defaults to 49153.
    *
    * @var int
    */
@@ -116,12 +116,21 @@ abstract class Device {
   }
 
   /**
-   * Gets the SOAP port of the Outlet. Currently always returns 49153, but this is subject to change.
+   * Gets the SOAP port of the device.
    *
    * @return int
    */
   public function getPort() {
     return $this->port;
+  }
+
+  /**
+   * Sets the SOAP port of the device.
+   *
+   * @param $port
+   */
+  public function setPort($port) {
+    $this->port = $port;
   }
 
   /**
