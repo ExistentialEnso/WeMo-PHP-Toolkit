@@ -1,0 +1,19 @@
+{
+  "name": "wemo-php-toolkit/wemo-php-toolkit",
+  "description": "PHP classes for use with Belkin's WeMo system",
+  "keywords": ["library", "wemo", "belkin"],
+  "homepage": "https://github.com/ExistentialEnso/WeMo-PHP-Toolkit",
+  "license": "LGPL v3",
+  "authors": [
+    {
+      "name": "Thorne Melcher"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/ExistentialEnso/WeMo-PHP-Toolkit/issues",
+    "source": "https://github.com/ExistentialEnso/WeMo-PHP-Toolkit"
+  },
+  "autoload": {
+    "psr-0": { "Wemo": "src/" }
+  }
+}
