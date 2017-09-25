@@ -31,6 +31,16 @@ class Outlet extends Device {
   public function __construct($ip_address, $port = null) {
     $this->ip_address = $ip_address;
     if ( $port ) $this->port = $port;
+    $this->refresh();
+  }
+
+  /**
+   * Enable to change the IP and port of exsiting object
+   */
+  public function setIP($ip_address, $port = null) {
+    $this->ip_address = $ip_address;
+    if ( $port ) $this->port = $port;
+    $this->refresh();
   }
 
   /**
@@ -41,8 +51,20 @@ class Outlet extends Device {
     $contents = @file_get_contents("http://" . $this->ip_address . ":" . $this->port . "/setup.xml");
 
     if($contents === false) {
+
+      if ($this->port == "49154") {
+        $this->port = "49153";
+        $this->refresh();
+        return;
+      }
+      elseif ( $this->port == "49153") {
+        $this->port = "49152";
+        $this->refresh();
+        return;
+      }
+
       $this->properties_fetched;
-      trigger_error("Unable to connect to outlet at " . $ip_address, E_USER_WARNING);
+      trigger_error("Unable to connect to outlet at " . $this->ip_address, E_USER_WARNING);
     }
 
     $contents = new \SimpleXMLElement($contents);
