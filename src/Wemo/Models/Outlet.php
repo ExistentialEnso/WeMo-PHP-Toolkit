@@ -28,8 +28,9 @@ class Outlet extends Device {
    *
    * @param $ip_address
    */
-  public function __construct($ip_address) {
+  public function __construct($ip_address, $port = null) {
     $this->ip_address = $ip_address;
+    if ( $port ) $this->port = $port;
   }
 
   /**
