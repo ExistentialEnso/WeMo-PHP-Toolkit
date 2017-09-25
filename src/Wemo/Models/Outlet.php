@@ -35,15 +35,6 @@ class Outlet extends Device {
   }
 
   /**
-   * Enable to change the IP and port of exsiting object
-   */
-  public function setIP($ip_address, $port = null) {
-    $this->ip_address = $ip_address;
-    if ( $port ) $this->port = $port;
-    $this->refresh();
-  }
-
-  /**
    * Updates the Outlet's state by pulling info from the outlet itself.
    */
   public function refresh() {
