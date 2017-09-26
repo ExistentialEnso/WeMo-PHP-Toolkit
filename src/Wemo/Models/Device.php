@@ -27,7 +27,7 @@ abstract class Device {
    *
    * @var int
    */
-  protected $port = 49153;
+  protected $port = 49154;
 
   /**
    * The MAC address of the device.
