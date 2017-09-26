@@ -3,7 +3,6 @@ WeMo-PHP-Toolkit
 
 * Author: Thorne Melcher (GitHub: ExistentialEnso)
 * License: LGPL v3 (more permissive commercial licensing available for a fee on request)
-* Version: 0.1.1
 
 PHP classes for use with Belkin's WeMo system. Currently only has an "Outlet" class (sorry, that's the only WeMo product
 I own!)
@@ -32,6 +31,7 @@ $ composer.phar install
 
 ```php
 $outlet = new Outlet("192.168.1.x"); // Change to location of Outlet on your network
+$outlet = new Outlet("192.168.1.x","49513"); // Optional you can add the port where the device is reachable
 $outlet->setIsOn(false); // Outlet will shut off!
 ```
 
@@ -43,3 +43,13 @@ $outlet->getDisplayName(); // e.g. "Air Purifier"
 $outlet->getManufacturer(); // e.g. "Belkin"
 $outlet->getModelDescription(); // e.g. "Belkin Plugin Socket 1.0"
 ```
+
+
+# Version History
+
+*Version: 0.2.1 (2017-09-26)*
+  - Optional port can be configured
+  - If not port is configured automatic search of applicable device port (49152, 49153, 49154)
+  - Add method refresh on object construct to fill device information properties
+
+*Version: 0.1.1*
